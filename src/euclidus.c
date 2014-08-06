@@ -79,11 +79,11 @@ int initWindow(int argc, char *argv[]) {
 
 	// Set up callback data
 	ss_data->image_odd = (imageData *) malloc(sizeof(imageData));
-	sprintf(&ss_data->image_odd->path[0], "/root/Desktop/scd/als-logo.png");
+	sprintf(&ss_data->image_odd->path[0], "%s/%s", IMG_PATH, IMAGE_ODD);
 	load_image(ss_data->image_odd);
 
 	ss_data->image_even = (imageData *) malloc(sizeof(imageData));
-	sprintf(&ss_data->image_even->path[0], "/root/Desktop/scd/als-logo-inverse.png");
+	sprintf(&ss_data->image_even->path[0], "%s/%s", IMG_PATH, IMAGE_EVEN);
 	load_image(ss_data->image_even);
 
 	// Calculate image coordinates

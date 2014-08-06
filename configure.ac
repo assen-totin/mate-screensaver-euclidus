@@ -36,6 +36,7 @@ fi
 AC_DEFINE_UNQUOTED([LIBDIR], ["$LIBDIR"], ["Directory where application-specific libraries are installed"])
 PIXMAPDIR=$prefix/share/pixmaps
 AC_SUBST([PIXMAPDIR])
+AC_DEFINE_UNQUOTED([IMG_PATH], ["$PIXMAPDIR"], [Define icons location])
 ICONSDIR=$prefix/share/icons
 AC_SUBST([ICONSDIR])
 LOCALEDIR=$prefix/share/locale

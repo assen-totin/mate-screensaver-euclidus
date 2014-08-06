@@ -14,6 +14,7 @@
 #include <gtk/gtkgl.h>
 #include <GL/gl.h> 
 #include <GL/glu.h>
+#include "../config.h"
 
 #define FRAMES_PER_SECOND 60	// FPS
 #define FRAMES_PER_STAGE 60
@@ -22,6 +23,8 @@
 #define LENGTH_SECOND 0.55
 #define LINE_THICK 3
 #define LINE_THIN 2
+#define IMAGE_ODD "als-logo.png"
+#define IMAGE_EVEN "als-logo-inverse.png"
 
 enum {
 	COLOUR_BLACK = 0,
