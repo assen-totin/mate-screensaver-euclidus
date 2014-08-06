@@ -1,0 +1,50 @@
+REQUIREMENTS
+============
+
+1. GTK+ 2.0
+
+2. OpenGL
+
+3. OpenGL-GTK-X11
+
+4. pkg-config.  
+
+5. gcc. 
+
+6. make from autoconf tools.
+
+
+INSTALLATION
+============
+
+1. ./configure
+
+2. make
+
+3. (as root) make install
+
+
+BUILDING RPM
+============
+
+Two ways to build an RPM file: 
+
+1. Outside the source tree: 
+- ./configure
+- Use the created mate-screensaver-euclidus.spec to build the RPM
+
+2. Inside the source tree:
+- Edit the mate-screensaver-euclidus.spec and coment out the two lines in the begining of the file (read comments for details)
+- ./configure && make && make rpm
+
+Also, for rpm you'd probably like to call ./configure this way:
+     ./configure --prefix=/usr
+
+
+UNINSTALL
+=========
+
+make uninstall
+
+
+

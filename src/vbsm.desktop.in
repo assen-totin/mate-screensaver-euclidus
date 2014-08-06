@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Voody Blue Subtitler (Master)
+GenericName=Voody Blue Subtitler (Master)
+Comment=Subtitler Tool
+Exec=vbsm
+Terminal=false
+Categories=GTK;Application;AudioVideo;Audio;Video;Player;TV;
+Icon=@DATAROOTDIR@/icons/vbs.png

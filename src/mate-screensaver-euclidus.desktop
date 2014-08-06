@@ -1,0 +1,15 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Name=Euclidus Screensaver
+GenericName=Euclidus Screensaver
+Exec=mate-screensaver-euclidus -root
+Comment=Euclidus Screensaver
+StartupNotify=false
+Terminal=false
+Categories=Screensaver
+OnlyShowIn=GNOME;MATE
+Name[en_GB]=Euclidus Screensaver
+Name[en_US]=Euclidus Screensaver
+Name[ru_RU]=Скрийнсейвер "Евклидус"
+Name[bg_BG]=Скрийнсейвър "Евклидус"
