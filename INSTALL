@@ -7,11 +7,11 @@ REQUIREMENTS
 
 3. OpenGL-GTK-X11
 
-4. pkg-config.  
+4. pkg-config
 
-5. gcc. 
+5. gcc
 
-6. make from autoconf tools.
+6. make
 
 
 INSTALLATION

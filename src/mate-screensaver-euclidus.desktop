@@ -4,6 +4,7 @@ Encoding=UTF-8
 Name=Euclidus Screensaver
 GenericName=Euclidus Screensaver
 Exec=mate-screensaver-euclidus -root
+TryExec=mate-screensaver-euclidus
 Comment=Euclidus Screensaver
 StartupNotify=false
 Terminal=false

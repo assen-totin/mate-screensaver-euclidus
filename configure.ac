@@ -79,6 +79,23 @@ APPLET_LIBS=`$PKG_CONFIG --libs glib-2.0 gtk+-2.0 gtkglext-x11-1.0 gl`
 AC_SUBST([APPLET_FLAGS])
 AC_SUBST([APPLET_LIBS])
 
+# MATE or GNOME-2?
+HAVE_MATE="0"
+HAVE_GNOME_2="0"
+LIBEXEC_SUBDIR=""
+if [[ -x  $LIBEXECDIR/mate-screensaver ]] ; then
+	HAVE_MATE="1";
+	LIBEXEC_SUBDIR="mate-screensaver";
+	AC_DEFINE([HAVE_MATE], [1], [Define if we have MATE Desktop Environment])
+elif [[ -x  $LIBEXECDIR/gnome-screensaver ]] ; then
+	HAVE_GNOME_2="0";
+	LIBEXEC_SUBDIR="gnome-screensaver";
+	AC_DEFINE([HAVE_GNOME_2], [1], [Define if we have GNOME-2 Desktop Environment])
+else
+	AC_MSG_ERROR(["*** screensaver libexec subdirectory not found."])
+fi
+AC_SUBST([LIBEXEC_SUBDIR])
+
 # Makefiles
 AC_CONFIG_FILES([Makefile src/Makefile images/Makefile po/Makefile.in po/Makefile])
 

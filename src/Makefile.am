@@ -20,11 +20,13 @@
 APPLET_FLAGS=@APPLET_FLAGS@
 APPLET_LIBS=@APPLET_LIBS@
 HAVE_MATE=@HAVE_MATE@
+LIBEXEC_SUBDIR=@LIBEXEC_SUBDIR@
 
 AM_CPPFLAGS = @GTK_CFLAGS@ @APPLET_FLAGS@
 LDADD = @GTK_LIBS@ @APPLET_LIBS@ -lm
 
-bin_PROGRAMS = mate-screensaver-euclidus
+scrdir = $(libexecdir)/$(LIBEXEC_SUBDIR)
+scr_PROGRAMS = mate-screensaver-euclidus
 
 mate_screensaver_euclidus_SOURCES = euclidus.h euclidus.c gs-theme-window.h gs-theme-window.c
 
