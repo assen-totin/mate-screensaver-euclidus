@@ -1,32 +1,23 @@
 /*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
- *  USA.
- *
- *  MATE Euclidus screensaver written by Assen Totin <assen.totin@gmail.com>
- *  
+ * This file is intended to give a broad overview with tons of comments.
+ * This program is based off of a gtk/gl example called teapot.c, checked in by tristan
+ * Find it here: https://svn.sat.qc.ca/trac/miville/browser/inhouse/prototypes/openGL/teapot.c?rev=1285	
+ * 
+ * Please make use of this code! --Ankillito
  */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/time.h>
 #include <math.h>
+#include <string.h>
 #include <gtk/gtk.h>
 #include <gtk/gtkgl.h>
 #include <GL/gl.h> 
 #include <GL/glu.h>
+#include "gs-theme-window.h"
 #include "../config.h"
+
 
 #define FRAMES_PER_SECOND 60	// FPS
 #define FRAMES_PER_STAGE 60
@@ -82,17 +73,23 @@ typedef struct {
 	int tm_min;
 } ssData; 
 
-static gboolean deleteEvent(GtkWidget *widget, GdkEvent *event, gpointer data);
+static gboolean deleteEvent(GtkWidget *widget, GdkEvent *event, gpointer data); //gtk event when window is closed - probably won't edit
 	
 static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer userData);
+/*
+ * This is the important function.  This draws stuff when the window is resized, moved, or made visable (ie, brought out
+ *  from underneath antother window). This won't really happen as a screenaver other than once when the program starts
+ *  up.  However, we use the idle function to call this function again, so this basically is the animation function.
+ *  Put your graphical code here!
+ */
 	
-static gboolean idleCb(gpointer userData); 
+static gboolean idleCb(gpointer userData); //When idle, ask that the drawing area is redrawn via exbose call back - probably won't edit
 
-static gboolean configureCb(GtkWidget *drawingArea, GdkEventConfigure *event, gpointer user_data); 
+static gboolean configureCb(GtkWidget *drawingArea, GdkEventConfigure *event, gpointer user_data); //Set up openGL - set your enables and stuff here
 	
-static void startEventLoop(); 
-	
-int initWindow(int argc, char *argv[]); 
+int initWindow(int argc, char *argv[]); //Set up the window, callbacks, and initialize gtkglext  - probably won't edit
+
+//And the main function
 
 void calculate_coordinates(float angle, float length, float *res);
 

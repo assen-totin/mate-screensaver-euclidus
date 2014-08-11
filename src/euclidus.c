@@ -1,23 +1,6 @@
 /*
- *  This program is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Library General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program; if not, write to the Free Software
- *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
- *  USA.
- *
- *  MATE Euclidus screensaver written by Assen Totin <assen.totin@gmail.com>
- *  
+ *  See the header file for more abstract comments and credits.
  */
-
 #include "euclidus.h" 
 
 /**
@@ -342,14 +325,6 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 	if (ss_data->stage >= STAGE_IMAGE) {
 		glEnable(GL_TEXTURE_2D);
 
-		// Determine which multiplier to use
-		if (ss_data->mul_img < 1)
-			glColor4f(1.0, 1.0, 1.0, ss_data->mul_img);
-		else if (mul_img_out < 1)
-			glColor4f(1.0, 1.0, 1.0, mul_img_out);
-		else if (mul_img_in < 1)
-			glColor4f(1.0, 1.0, 1.0, mul_img_in);
-
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
 
 		// Determine which textute to bind
@@ -369,6 +344,14 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 		}
 
 		glBegin(GL_QUADS);
+                // Determine which multiplier to use
+                if (ss_data->mul_img < 1)
+                        glColor4f(1.0, 1.0, 1.0, ss_data->mul_img);
+                else if (mul_img_out < 1)
+                        glColor4f(1.0, 1.0, 1.0, mul_img_out);
+                else if (mul_img_in < 1)
+                        glColor4f(1.0, 1.0, 1.0, mul_img_in);
+
 		glTexCoord2f(0, 0); glVertex3f(ss_data->coord_img[0], ss_data->coord_img[1], 0);
 		glTexCoord2f(0, 1); glVertex3f(ss_data->coord_img[2], ss_data->coord_img[3], 0);
 		glTexCoord2f(1, 1); glVertex3f(ss_data->coord_img[4], ss_data->coord_img[5], 0);
