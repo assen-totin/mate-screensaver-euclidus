@@ -40,7 +40,7 @@ make install DESTDIR="${RPM_BUILD_ROOT}"
 # Do not install doc files: they are handled as rpm doc files.
 rm -rf "${RPM_BUILD_ROOT}%{_docdir}"
 
-#%find_lang mate-screensaver-euclidus
+%find_lang mate-screensaver-euclidus
 
 %post
 
@@ -48,8 +48,7 @@ rm -rf "${RPM_BUILD_ROOT}%{_docdir}"
 
 rm -rf "${RPM_BUILD_ROOT}"
 
-#%files -f mate-screensaver-euclidus.lang
-%files
+%files -f mate-screensaver-euclidus.lang
 
 %defattr(-, root, root, -)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO

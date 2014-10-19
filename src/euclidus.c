@@ -14,6 +14,10 @@ int main(int argc, char *argv[]) {
 	if(initWindow(argc, argv))
 		gtk_main();
 
+        // Gettext *really* wants to have at least one invocation, so keep it happy
+        char a[1024];
+        snprintf(&a[0], 1023, "%s\n", _("Dummy string"));
+
 	return 0;
 }
 

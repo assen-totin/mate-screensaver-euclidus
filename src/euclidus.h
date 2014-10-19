@@ -15,10 +15,11 @@
 #include <gtk/gtkgl.h>
 #include <GL/gl.h> 
 #include <GL/glu.h>
+#include <libintl.h>
 #include "gs-theme-window.h"
 #include "../config.h"
 
-
+#define _(String) gettext (String)
 #define FRAMES_PER_SECOND 60	// FPS
 #define FRAMES_PER_STAGE 60
 #define LENGTH_HOUR 0.25		// Of the half-height of the srceen

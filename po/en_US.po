@@ -1,0 +1,22 @@
+# English translations for mate-screensaver-euclidus package.
+# Copyright (C) 2014 THE mate-screensaver-euclidus'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the mate-screensaver-euclidus package.
+# root <root@localhost>, 2014.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: mate-screensaver-euclidus 1.0\n"
+"Report-Msgid-Bugs-To: assen.totin@gmail.com\n"
+"POT-Creation-Date: 2014-10-19 18:27+0300\n"
+"PO-Revision-Date: 2014-10-19 18:27+0300\n"
+"Last-Translator: root <root@localhost>\n"
+"Language-Team: English\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: mate-screensaver-euclidus-1.0/src/euclidus.c:19 src/euclidus.c:19
+msgid "Dummy string"
+msgstr "Dummy string"
