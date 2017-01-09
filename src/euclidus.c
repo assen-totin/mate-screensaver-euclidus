@@ -31,10 +31,8 @@ int main(int argc, char *argv[]) {
 int initWindow(int argc, char *argv[]) {
 	int i, width, height;
 	gboolean fullscreen = FALSE;
-	//GtkWidget *window;
 	GtkWidget *drawingArea;
 	GdkScreen* screen = NULL;
-	GdkGLConfig *glConfig;
 	ssData *ss_data = malloc(sizeof(ssData));
 
 	// Init GTK
@@ -83,7 +81,7 @@ int initWindow(int argc, char *argv[]) {
 #ifdef HAVE_GTK2
 	// Init OpenGL within the contex of gdk
 	gtk_gl_init(&argc, &argv);
-	glConfig = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGBA | GDK_GL_MODE_DEPTH | GDK_GL_MODE_DOUBLE);
+	GdkGLConfig *glConfig = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGBA | GDK_GL_MODE_DEPTH | GDK_GL_MODE_DOUBLE);
 
 	if (!glConfig)
 		g_assert_not_reached();
@@ -140,22 +138,31 @@ static gboolean configureCb(GtkWidget *drawingArea, GdkEventConfigure *event, gp
 	// Enter the OpenGL state
 	if (!gdk_gl_drawable_gl_begin(glDrawable, glContext))
 		g_assert_not_reached();
-#elif HAVE_GTK3
-	//GtkWidget *area = (GtkWidget *) g_object_get_data (G_OBJECT (window), "area");
-	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (window), "context");
-	if (gtk_opengl_current (drawingArea, glxContext) == FALSE)
-		return FALSE;
-#endif
 
 	// Specify what part of the screen to draw to - all of it (lower left corner, top right corner)
 	glViewport(0,0,drawingArea->allocation.width, drawingArea->allocation.height);
-  
+#elif HAVE_GTK3
+	GtkAllocation allocation;
+	//GtkWidget *area = (GtkWidget *) g_object_get_data (G_OBJECT (window), "area");
+	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (ss_data->window), "context");
+	if (gtk_opengl_current (drawingArea, glxContext) == FALSE)
+		return FALSE;
+
+	// Specify what part of the screen to draw to - all of it (lower left corner, top right corner)
+	gtk_widget_get_allocation (drawingArea, &allocation);
+	glViewport(0, 0, allocation.width, allocation.height);
+#endif
+ 
 	// Select & reset the Projection Matrix
 	glMatrixMode(GL_PROJECTION);	
 	glLoadIdentity();
 
 	// Specify projection
+#ifdef HAVE_GTK2
 	gluPerspective(45.0f,(GLfloat)drawingArea->allocation.width/(GLfloat)drawingArea->allocation.height, 0.1f, 100.0f);  
+#elif HAVE_GTK3
+	gluPerspective(45.0f,(GLfloat)allocation.width/(GLfloat)allocation.height, 0.1f, 100.0f);  
+#endif
 
 	// Use Modelview Matrix and reset it
 	glMatrixMode(GL_MODELVIEW);
@@ -291,7 +298,7 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 		g_assert_not_reached();
 #elif HAVE_GTK3
 	//GtkWidget *area = (GtkWidget *) g_object_get_data (G_OBJECT (window), "area");
-	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (window), "context");
+	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (ss_data->window), "context");
 	if (gtk_opengl_current (drawingArea, glxContext) == FALSE)
 		return FALSE;
 #endif
@@ -441,7 +448,7 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 	// End the OpenGL state
 	gdk_gl_drawable_gl_end (glDrawable);
 #elif HAVE_GTK3
-	gtk_opengl_swap (area);
+	gtk_opengl_swap (drawingArea);
 #endif
 
 	return TRUE;
@@ -458,7 +465,12 @@ static gboolean idleCb(gpointer user_data) {
 
     // Invalidate drawing area, marking it "dirty" and to be redrawn when
     // main loop signals expose-events, which it does as needed when it returns
+#ifdef HAVE_GTK2
 	gdk_window_invalidate_rect(drawingArea->window, &drawingArea->allocation, FALSE);
+#elif HAVE_GTK3
+	GtkAllocation allocation;
+	gdk_window_invalidate_rect(gtk_widget_get_window(drawingArea), &allocation, FALSE);
+#endif
 
 	return TRUE;
 }

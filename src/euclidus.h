@@ -12,14 +12,15 @@
 #include <math.h>
 #include <string.h>
 #include <gtk/gtk.h>
-#include <gtk/gtkgl.h>
 #include <GL/gl.h> 
 #include <GL/glu.h>
 #include <libintl.h>
 #include "gs-theme-window.h"
 #include "../config.h"
 
-#ifdef HAVE_GTK3
+#ifdef HAVE_GTK2
+	#include <gtk/gtkgl.h>
+#elif HAVE_GTK3
 	#include "gtk_opengl.h"
 #endif
 

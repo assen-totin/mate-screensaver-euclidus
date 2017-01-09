@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: mate-screensaver-euclidus 1.0\n"
 "Report-Msgid-Bugs-To: assen.totin@gmail.com\n"
-"POT-Creation-Date: 2014-10-19 18:27+0300\n"
+"POT-Creation-Date: 2017-01-09 23:20+0200\n"
 "PO-Revision-Date: 2014-10-19 18:27+0300\n"
 "Last-Translator: root <root@localhost>\n"
 "Language-Team: English\n"
@@ -17,6 +17,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: mate-screensaver-euclidus-1.0/src/euclidus.c:19 src/euclidus.c:19
+#: src/euclidus.c:19
 msgid "Dummy string"
 msgstr "Dummy string"

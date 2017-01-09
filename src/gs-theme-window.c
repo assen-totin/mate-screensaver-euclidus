@@ -136,7 +136,11 @@ gs_theme_window_real_realize (GtkWidget *widget)
                 if ((remote_xwindow != 0) && (end != NULL) &&
                     ((*end == ' ') || (*end == '\0')) &&
                     ((remote_xwindow < G_MAXULONG) || (errno != ERANGE))) {
+#ifdef HAVE_GTK2
                         window = gdk_window_foreign_new (remote_xwindow);
+#elif HAVE_GTK3
+                               window = gdk_x11_window_foreign_new_for_display (gdk_display_get_default (), remote_xwindow);
+#endif
 
                         if (window != NULL) {
                                 /* This is a kludge; we need to set the same
@@ -169,17 +173,29 @@ gs_theme_window_real_realize (GtkWidget *widget)
                 return;
         }
 
-        gtk_style_set_background (widget->style,
-                                  window,
-                                  GTK_STATE_NORMAL);
+#ifdef HAVE_GTK2
+        gtk_style_set_background (widget->style, window, GTK_STATE_NORMAL);
+#elif HAVE_GTK3
+        gtk_style_set_background (gtk_widget_get_style(widget), window, GTK_STATE_NORMAL);
+#endif
+
         gdk_window_set_decorations (window, (GdkWMDecoration) 0);
         gdk_window_set_events (window, gdk_window_get_events (window) | event_mask);
 
+#ifdef HAVE_GTK2
         widget->window = window;
-        gdk_window_set_user_data (window, widget);
-        GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
+#elif HAVE_GTK3
+        gtk_widget_set_window (widget, window);
+#endif
 
+        gdk_window_set_user_data (window, widget);
+
+#ifdef HAVE_GTK2
+        GTK_WIDGET_SET_FLAGS (widget, GTK_REALIZED);
         gdk_window_get_geometry (window, &x, &y, &width, &height, NULL);
+#elif HAVE_GTK3
+        gdk_window_get_geometry (window, &x, &y, &width, &height);
+#endif
 
         if (width < MIN_SIZE || height < MIN_SIZE) {
                 g_critical ("This window is way too small to use");
