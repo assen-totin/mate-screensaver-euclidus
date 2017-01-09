@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
 int initWindow(int argc, char *argv[]) {
 	int i, width, height;
 	gboolean fullscreen = FALSE;
-	GtkWidget *window;
+	//GtkWidget *window;
 	GtkWidget *drawingArea;
 	GdkScreen* screen = NULL;
 	GdkGLConfig *glConfig;
@@ -51,26 +51,36 @@ int initWindow(int argc, char *argv[]) {
 	}
 
 	// Init screensaver window: gnome-screensaver expects gs_theme_window, so don't use the usual 'window = gtk_window_new(GTK_WINDOW_TOPLEVEL);')
-	window = gs_theme_window_new();
+	ss_data->window = gs_theme_window_new();
 
 	// Set the non-full screen to something proportional to the screen size.  (1/2)
-	screen = gtk_window_get_screen(GTK_WINDOW(window)); //Notice that window is a pointer to a GtkWidget, so it must get cast when passed in
+	screen = gtk_window_get_screen(GTK_WINDOW(ss_data->window)); //Notice that window is a pointer to a GtkWidget, so it must get cast when passed in
 	width = gdk_screen_get_width(screen);
 	height = gdk_screen_get_height(screen);
-	gtk_window_set_default_size(GTK_WINDOW(window), width/2, height/2);
+	gtk_window_set_default_size(GTK_WINDOW(ss_data->window), width/2, height/2);
 
 	if(fullscreen) 
-		gtk_window_fullscreen(GTK_WINDOW(window));
+		gtk_window_fullscreen(GTK_WINDOW(ss_data->window));
 
 	// Init drawing area, add it to the window
 	drawingArea = gtk_drawing_area_new();
-	gtk_container_add(GTK_CONTAINER(window), drawingArea);
+
+#ifdef HAVE_GTK3
+	int attributes[] = { GLX_RGBA, GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1, GLX_DOUBLEBUFFER, True, GLX_DEPTH_SIZE, 12, None };
+	GLXContext glxContext = NULL;
+	glxContext = gtk_opengl_create (drawingArea, attributes, glxContext, TRUE);
+	//g_object_set_data (G_OBJECT (ss_data->window), "area", drawingArea);
+	g_object_set_data (G_OBJECT (ss_data->window), "context", glxContext);
+#endif
+
+	gtk_container_add(GTK_CONTAINER(ss_data->window), drawingArea);
 
 	// Register window callbacks
-	g_signal_connect_swapped(window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
-	g_signal_connect(G_OBJECT(window), "delete-event", G_CALLBACK(deleteEvent), NULL);
+	g_signal_connect_swapped(ss_data->window, "destroy", G_CALLBACK(gtk_main_quit), NULL);
+	g_signal_connect(G_OBJECT(ss_data->window), "delete-event", G_CALLBACK(deleteEvent), NULL);
 	gtk_widget_set_events(drawingArea, GDK_EXPOSURE_MASK);
 
+#ifdef HAVE_GTK2
 	// Init OpenGL within the contex of gdk
 	gtk_gl_init(&argc, &argv);
 	glConfig = gdk_gl_config_new_by_mode(GDK_GL_MODE_RGBA | GDK_GL_MODE_DEPTH | GDK_GL_MODE_DOUBLE);
@@ -80,6 +90,7 @@ int initWindow(int argc, char *argv[]) {
 
 	if (!gtk_widget_set_gl_capability(drawingArea, glConfig, NULL, TRUE, GDK_GL_RGBA_TYPE))
 		g_assert_not_reached();
+#endif
 
 	// Set up callback data
 	ss_data->image_odd = (imageData *) malloc(sizeof(imageData));
@@ -107,7 +118,7 @@ int initWindow(int argc, char *argv[]) {
 	g_timeout_add(TIMEOUT_PERIOD, idleCb, drawingArea);
 
 	// Run the show
-	gtk_widget_show_all(window);
+	gtk_widget_show_all(ss_data->window);
 	return 1;
 }
 
@@ -120,13 +131,21 @@ int initWindow(int argc, char *argv[]) {
  * @returns boolean TRUE on succcessful configuration, FALSE otherwise.
  */
 static gboolean configureCb(GtkWidget *drawingArea, GdkEventConfigure *event, gpointer user_data) {
+	ssData *ss_data = user_data;
+
+#ifdef HAVE_GTK2
 	GdkGLContext *glContext = gtk_widget_get_gl_context(drawingArea);
 	GdkGLDrawable *glDrawable = gtk_widget_get_gl_drawable(drawingArea);
-	ssData *ss_data = user_data;
 
 	// Enter the OpenGL state
 	if (!gdk_gl_drawable_gl_begin(glDrawable, glContext))
 		g_assert_not_reached();
+#elif HAVE_GTK3
+	//GtkWidget *area = (GtkWidget *) g_object_get_data (G_OBJECT (window), "area");
+	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (window), "context");
+	if (gtk_opengl_current (drawingArea, glxContext) == FALSE)
+		return FALSE;
+#endif
 
 	// Specify what part of the screen to draw to - all of it (lower left corner, top right corner)
 	glViewport(0,0,drawingArea->allocation.width, drawingArea->allocation.height);
@@ -149,7 +168,9 @@ static gboolean configureCb(GtkWidget *drawingArea, GdkEventConfigure *event, gp
 	glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);
 
 	// End OpenGL state
+#ifdef HAVE_GTK2
 	gdk_gl_drawable_gl_end(glDrawable);
+#endif
 
 	// Create texture for ODD image
 	glGenTextures(1, &ss_data->image_odd->texture);
@@ -261,12 +282,19 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 	ss_data->tm_min = now.tm_min;
 
 	// Extract the GTK GL objects from the widget
+#ifdef HAVE_GTK2
 	GdkGLContext *glContext = gtk_widget_get_gl_context(drawingArea);
 	GdkGLDrawable *glDrawable = gtk_widget_get_gl_drawable(drawingArea);
 
 	// Start GL state
 	if (!gdk_gl_drawable_gl_begin(glDrawable, glContext))
 		g_assert_not_reached();
+#elif HAVE_GTK3
+	//GtkWidget *area = (GtkWidget *) g_object_get_data (G_OBJECT (window), "area");
+	GLXContext glxContext = (GLXContext) g_object_get_data (G_OBJECT (window), "context");
+	if (gtk_opengl_current (drawingArea, glxContext) == FALSE)
+		return FALSE;
+#endif
 
 	// Reset to orgin; at this point, continue with regular OpenGL code
 	glLoadIdentity();  
@@ -403,6 +431,7 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 		draw_line(LINE_THICK, COLOUR_RED, &coord_centre[0], &coord_s[0], ss_data->mul_s);
 	}
 
+#ifdef HAVE_GTK2
 	// Swap buffer if we're using double-buffering
 	if (gdk_gl_drawable_is_double_buffered(glDrawable))     
 		gdk_gl_drawable_swap_buffers(glDrawable); 
@@ -411,6 +440,9 @@ static gboolean exposeCb(GtkWidget *drawingArea, GdkEventExpose *event, gpointer
 
 	// End the OpenGL state
 	gdk_gl_drawable_gl_end (glDrawable);
+#elif HAVE_GTK3
+	gtk_opengl_swap (area);
+#endif
 
 	return TRUE;
 }

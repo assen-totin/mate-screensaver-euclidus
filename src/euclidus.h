@@ -19,6 +19,10 @@
 #include "gs-theme-window.h"
 #include "../config.h"
 
+#ifdef HAVE_GTK3
+	#include "gtk_opengl.h"
+#endif
+
 #define _(String) gettext (String)
 #define FRAMES_PER_SECOND 60	// FPS
 #define FRAMES_PER_STAGE 60
@@ -72,6 +76,7 @@ typedef struct {
 	float mul_g2;
 	float mul_img;
 	int tm_min;
+	GtkWidget *window;
 } ssData; 
 
 static gboolean deleteEvent(GtkWidget *widget, GdkEvent *event, gpointer data); //gtk event when window is closed - probably won't edit

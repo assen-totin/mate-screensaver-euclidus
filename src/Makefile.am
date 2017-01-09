@@ -19,7 +19,7 @@
 
 APPLET_FLAGS=@APPLET_FLAGS@
 APPLET_LIBS=@APPLET_LIBS@
-HAVE_MATE=@HAVE_MATE@
+SELECTED_GTK=@SELECTED_GTK@
 LIBEXEC_SUBDIR=@LIBEXEC_SUBDIR@
 
 AM_CPPFLAGS = @GTK_CFLAGS@ @APPLET_FLAGS@
@@ -29,6 +29,9 @@ scrdir = $(libexecdir)/$(LIBEXEC_SUBDIR)
 scr_PROGRAMS = mate-screensaver-euclidus
 
 mate_screensaver_euclidus_SOURCES = euclidus.h euclidus.c gs-theme-window.h gs-theme-window.c
+ifeq ($(SELECTED_GTK),GTK-3)
+	mate_screensaver_euclidus_SOURCES += gtk_opengl.c gtk_opengl.h
+endif
 
 desktopdir = $(datadir)/applications
 desktop_DATA = mate-screensaver-euclidus.desktop

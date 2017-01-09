@@ -118,20 +118,21 @@ if test $USE_GTK = "3" ; then
 	AC_DEFINE([HAVE_GTK3], [1], ["Define GTK3"])
 	AC_DEFINE([GETTEXT_PACKAGE], ["gtk30"], ["GTK gettext"])
 	AC_SUBST([GETTEXT_PACKAGE])
-	RPM_REQUIRE_GTK="Requires: gtk3 >= 3.14.0"
-	RPM_BUILDREQUIRE_GTK="Requires: gtk3 >= 3.14.0"
+	RPM_REQUIRE_GTK="Requires: gtk3 >= 3.14.0, libXmu-devel, mesa-libGLU-devel"
+	RPM_BUILDREQUIRE_GTK="BuildRequires: gtk3-devel >= 3.14.0, libXmu-devel, mesa-libGLU-devel"
 	SELECTED_GTK="GTK-3"
 elif test $USE_GTK = "2" ; then
 	AC_DEFINE([HAVE_GTK2], [1], ["Define GTK2"])
 	AC_DEFINE([GETTEXT_PACKAGE], ["gtk20"], ["GTK gettext"])
 	AC_SUBST([GETTEXT_PACKAGE])
-	RPM_REQUIRE_GTK="Requires: gtk2 >= 2.24.0"
-	RPM_BUILDREQUIRE_GTK="Requires: gtk2-devel >= 2.24.0"
+	RPM_REQUIRE_GTK="Requires: gtk2 >= 2.24.0, gtkglext-libs"
+	RPM_BUILDREQUIRE_GTK="BuildRequires: gtk2-devel >= 2.24.0, gtkglext-devel"
 	SELECTED_GTK="GTK-2"
 else
 	AC_MSG_ERROR(["*** GTK not found."])
 fi
 
+AC_SUBST([SELECTED_GTK])
 AC_SUBST([RPM_REQUIRE_GTK])
 AC_SUBST([RPM_BUILDREQUIRE_GTK])
 
@@ -152,7 +153,7 @@ AC_SUBST([APPLET_LIBS])
 # Makefiles
 AC_CONFIG_FILES([Makefile src/Makefile images/Makefile po/Makefile.in po/Makefile])
 
-# Service files
+# RPM files
 AC_CONFIG_FILES([mate-screensaver-euclidus.spec])
 
 # Icons
