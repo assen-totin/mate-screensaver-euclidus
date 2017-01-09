@@ -15,9 +15,10 @@ BuildRequires:  gettext-devel
 BuildRequires:  automake
 BuildRequires:  autoconf
 BuildRequires:	mesa-libGL-devel
-BuildRequires:  gtk2-devel
 Requires:       mesa-libGL
-Requires:       gtk2
+# Requires: and BuildRequires: for GTK
+@RPM_REQUIRE_GTK@
+@RPM_BUILDREQUIRE_GTK@
 
 %description
 Euclidus Screensaver for the MATE desktop environment.
