@@ -1,5 +1,5 @@
 AC_PREREQ([2.63])
-AC_INIT([mate-screensaver-euclidus], [1.0], [assen.totin@gmail.com])
+AC_INIT([mate-screensaver-euclidus], [2.0], [assen.totin@gmail.com])
 AC_CONFIG_HEADERS([config.h])
 
 AM_INIT_AUTOMAKE([-Wall])

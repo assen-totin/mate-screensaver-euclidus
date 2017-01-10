@@ -109,7 +109,11 @@ int initWindow(int argc, char *argv[]) {
 	// Connect callback for window configuration - will be called only once
 	g_signal_connect(drawingArea, "configure-event", G_CALLBACK(configureCb), ss_data);
 	// Connect callback for window redraw - will be called every time we need to redraw due to becoming visible or being resized
+#ifdef HAVE_GTK2
 	g_signal_connect(drawingArea, "expose-event", G_CALLBACK(exposeCb), ss_data);
+#elif HAVE_GTK3
+	g_signal_connect(drawingArea, "draw", G_CALLBACK(exposeCb), ss_data);
+#endif
 
 	// Set timeout between frame rendering, call the rendering funciton at it.
 	const gdouble TIMEOUT_PERIOD = 1000 / FRAMES_PER_SECOND;
