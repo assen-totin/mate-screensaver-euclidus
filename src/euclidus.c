@@ -67,7 +67,6 @@ int initWindow(int argc, char *argv[]) {
 	int attributes[] = { GLX_RGBA, GLX_RED_SIZE, 1, GLX_GREEN_SIZE, 1, GLX_BLUE_SIZE, 1, GLX_DOUBLEBUFFER, True, GLX_DEPTH_SIZE, 12, None };
 	GLXContext glxContext = NULL;
 	glxContext = gtk_opengl_create (drawingArea, attributes, glxContext, TRUE);
-	//g_object_set_data (G_OBJECT (ss_data->window), "area", drawingArea);
 	g_object_set_data (G_OBJECT (ss_data->window), "context", glxContext);
 #endif
 
@@ -472,8 +471,7 @@ static gboolean idleCb(gpointer user_data) {
 #ifdef HAVE_GTK2
 	gdk_window_invalidate_rect(drawingArea->window, &drawingArea->allocation, FALSE);
 #elif HAVE_GTK3
-	GtkAllocation allocation;
-	gdk_window_invalidate_rect(gtk_widget_get_window(drawingArea), &allocation, FALSE);
+	gdk_window_invalidate_rect(gtk_widget_get_window(drawingArea), NULL, FALSE);
 #endif
 
 	return TRUE;
